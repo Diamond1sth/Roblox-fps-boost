@@ -26,31 +26,40 @@ if Terrain then
 	Terrain.WaterTransparency = 1
 end
 
--- Strip function
+-- Strip function with TeleportTarget whitelist
 local function strip(obj)
-	if obj:IsA("ParticleEmitter")
-	or obj:IsA("Trail")
-	or obj:IsA("Beam")
-	or obj:IsA("Fire")
-	or obj:IsA("Smoke")
-	or obj:IsA("Sparkles") then
-		obj.Enabled = false
-	end
+    -- WHITELIST TeleportTarget so auto-teleport objects are safe
+    if obj.Name == "TeleportTarget" then
+        return -- skip everything else for this object
+    end
 
-	if obj:IsA("BillboardGui")
-	or obj:IsA("SurfaceGui") then
-		obj:Destroy()
-	end
+    -- Remove VFX
+    if obj:IsA("ParticleEmitter")
+    or obj:IsA("Trail")
+    or obj:IsA("Beam")
+    or obj:IsA("Fire")
+    or obj:IsA("Smoke")
+    or obj:IsA("Sparkles") then
+        obj.Enabled = false
+    end
 
-	if obj:IsA("Decal") or obj:IsA("Texture") then
-		obj.Transparency = 1
-	end
+    -- Destroy GUI spam
+    if obj:IsA("BillboardGui")
+    or obj:IsA("SurfaceGui") then
+        obj:Destroy()
+    end
 
-	if obj:IsA("BasePart") then
-		obj.Material = Enum.Material.Plastic
-		obj.Reflectance = 0
-		obj.CastShadow = false
-	end
+    -- Remove textures
+    if obj:IsA("Decal") or obj:IsA("Texture") then
+        obj.Transparency = 1
+    end
+
+    -- Cheap rendering for parts
+    if obj:IsA("BasePart") then
+        obj.Material = Enum.Material.Plastic
+        obj.Reflectance = 0
+        obj.CastShadow = false
+    end
 end
 
 -- Initial cleanup
